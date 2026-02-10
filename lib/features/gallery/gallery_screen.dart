@@ -188,6 +188,43 @@ class GalleryScreen extends ConsumerWidget {
                             ],
                           ),
                           isThreeLine: true,
+                          trailing: IconButton(
+                            icon: const Icon(Icons.download),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                  title: const Text('Export Entry'),
+                                  content: const Text('Choose export format:'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(ctx);
+                                        ExportService.exportToCsv([entry]);
+                                      },
+                                      child: const Text('CSV'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(ctx);
+                                        ExportService.exportToPdf([entry]);
+                                      },
+                                      child: const Text('PDF'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(ctx);
+                                        _exportImagesToGallery(context, [
+                                          entry,
+                                        ]);
+                                      },
+                                      child: const Text('Image'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                           onTap: () {
                             Navigator.push(
                               context,

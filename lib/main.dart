@@ -8,6 +8,7 @@ import 'core/providers.dart';
 import 'features/gallery/gallery_screen.dart';
 import 'features/map_view/map_screen.dart';
 import 'features/capture/capture_screen.dart';
+import 'features/splash/splash_screen.dart';
 import 'services/database_service.dart';
 import 'models/geo_entry.dart';
 
@@ -52,9 +53,10 @@ class GeoTagApp extends ConsumerWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
-      initialRoute: '/',
+      initialRoute: '/splash',
       routes: {
-        '/': (context) => const HomeScreen(),
+        '/splash': (context) => const SplashScreen(),
+        '/home': (context) => const HomeScreen(),
         '/capture': (context) => const CaptureScreen(),
       },
     );

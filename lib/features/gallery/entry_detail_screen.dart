@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'dart:io';
 import '../../models/geo_entry.dart';
 import '../../core/utils.dart';
+import '../export/image_export_service.dart';
 
 class EntryDetailScreen extends StatelessWidget {
   final GeoEntry entry;
@@ -14,6 +15,10 @@ class EntryDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(entry.category)),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _downloadImage(context),
+        child: const Icon(Icons.download),
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -189,6 +194,23 @@ class EntryDetailScreen extends StatelessWidget {
     );
   }
 
+  Future<void> _downloadImage(BuildContext context) async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Preparing image for export...')),
+    );
+
+    try {
+      // Export logic here
+      await ImageExportService.exportAndShare([entry], null);
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Export failed: $e')));
+      }
+    }
+  }
+
   void _showFullImage(BuildContext context) {
     if (entry.imagePath.isEmpty) return;
 
@@ -200,6 +222,27 @@ class EntryDetailScreen extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: Colors.black,
             iconTheme: const IconThemeData(color: Colors.white),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.download),
+                onPressed: () async {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Preparing image for export...'),
+                    ),
+                  );
+                  try {
+                    await ImageExportService.exportAndShare([entry], null);
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Export failed: $e')),
+                      );
+                    }
+                  }
+                },
+              ),
+            ],
           ),
           body: Center(
             child: InteractiveViewer(
