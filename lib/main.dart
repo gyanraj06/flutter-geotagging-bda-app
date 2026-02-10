@@ -9,6 +9,8 @@ import 'features/gallery/gallery_screen.dart';
 import 'features/map_view/map_screen.dart';
 import 'features/capture/capture_screen.dart';
 import 'features/splash/splash_screen.dart';
+import 'features/auth/login_screen.dart';
+import 'features/settings/settings_screen.dart';
 import 'services/database_service.dart';
 import 'models/geo_entry.dart';
 
@@ -56,8 +58,10 @@ class GeoTagApp extends ConsumerWidget {
       initialRoute: '/splash',
       routes: {
         '/splash': (context) => const SplashScreen(),
+        '/login': (context) => const LoginScreen(),
         '/home': (context) => const HomeScreen(),
         '/capture': (context) => const CaptureScreen(),
+        '/settings': (context) => const SettingsScreen(),
       },
     );
   }
@@ -73,14 +77,18 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [GalleryScreen(), MapScreen()];
+  final List<Widget> _screens = const [
+    GalleryScreen(),
+    MapScreen(),
+    SettingsScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _currentIndex == 1
           ? AppBar(title: const Text('Map View'))
-          : null, // Gallery has its own AppBar
+          : null, // Gallery and Settings have their own AppBars
       body: IndexedStack(index: _currentIndex, children: _screens),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
@@ -96,13 +104,20 @@ class _HomeScreenState extends State<HomeScreen> {
             selectedIcon: Icon(Icons.map),
             label: 'Map',
           ),
+          NavigationDestination(
+            icon: Icon(Icons.settings_outlined),
+            selectedIcon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, '/capture'),
-        child: const Icon(Icons.camera_alt),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: _currentIndex != 2
+          ? FloatingActionButton(
+              onPressed: () => Navigator.pushNamed(context, '/capture'),
+              child: const Icon(Icons.camera_alt),
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       extendBody: true, // For transparency behind FAB if needed
     );
   }

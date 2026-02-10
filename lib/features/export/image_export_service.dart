@@ -134,7 +134,7 @@ class ImageExportService {
     // Draw branding
     img.drawString(
       result,
-      'GeoTag Pro',
+      'GeoTag',
       font: img.arial14,
       x: original.width - 90,
       y: newHeight - 20,
